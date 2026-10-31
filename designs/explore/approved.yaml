@@ -1,0 +1,30 @@
+id: explore
+approved: '2026-10-31'
+front:
+- We should
+- explore more
+back:
+- I’m not saying
+- that exploring
+- solves anything,
+- but curiosity usually
+- takes us somewhere
+- worth going
+style:
+  font: fonts/Caveat[wght].ttf
+  weight: 560
+  color: '#FFF8E7'
+  shirt_color: '#1F4E9C'
+  dpi: 300
+  front:
+    cap_height_mm: 36
+    line_pitch_mm: 76
+    width_mm: 280
+    max_text_width_mm: 270
+  back:
+    cap_height_mm: 24
+    line_pitch_mm: 54
+    width_mm: 280
+    max_text_width_mm: 270
+  front_offset_mm: 90
+  back_offset_mm: 70
