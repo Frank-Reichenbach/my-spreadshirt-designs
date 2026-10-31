@@ -1,0 +1,17 @@
+# generated output (approved designs are copied to designs/)
+/build/
+
+# original phone photos (contain GPS metadata) - stripped copies live in reference/photos/
+/IMG_*.JPG
+/IMG_*.jpg
+/IMG_*.HEIC
+
+# python
+.venv/
+__pycache__/
+*.pyc
+
+# os / editors
+.DS_Store
+.idea/
+.vscode/

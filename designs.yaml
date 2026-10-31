@@ -1,0 +1,63 @@
+# T-shirt text designs for spreadshirt.de
+#
+# Every design is a front/back pair. Lines are broken by hand, exactly as they
+# should appear on the shirt. Use a typographic apostrophe (’) like the originals.
+#
+# Pattern (see docs/pattern.md):
+#   front: "We should" / "<verb> more"
+#   back:  "I’m not saying" / "that <verb-ing | noun>" / "solves anything," /
+#          "but <a gentle, slightly ironic second half>"
+
+style:
+  font: fonts/Caveat[wght].ttf   # OFL licensed, free for commercial use
+  weight: 560                    # variable font axis 400..700
+  color: "#F6E8A6"               # pale cream yellow, as on the printed shirts
+  shirt_color: "#4E7290"         # only used for preview mock-ups
+  dpi: 300
+  front:                         # all sizes in millimetres
+    cap_height_mm: 36
+    line_pitch_mm: 76
+    width_mm: 280
+    max_text_width_mm: 270
+  back:
+    cap_height_mm: 24
+    line_pitch_mm: 54
+    width_mm: 280
+    max_text_width_mm: 270
+  front_offset_mm: 90            # preview only: distance collar -> top of text
+  back_offset_mm: 70
+
+designs:
+  - id: hug
+    front:
+      - We should
+      - hug more
+    back:
+      - I’m not saying
+      - that hugging
+      - solves anything,
+      - but it wouldn’t
+      - hurt either
+
+  - id: smile
+    front:
+      - We should
+      - smile more
+    back:
+      - I’m not saying
+      - that smiling
+      - solves anything,
+      - but it probably
+      - wouldn’t make
+      - things worse
+
+  - id: love
+    front:
+      - We should
+      - love more
+    back:
+      - I’m not saying
+      - that love
+      - solves anything,
+      - but hate gets
+      - us nowhere
