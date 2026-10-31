@@ -11,6 +11,7 @@ docs/pattern.md       description of the text and visual pattern
 tools/render.py       YAML -> SVG + PNG + preview mock-up
 tools/compare.py      reference photo vs. recreation sheet
 tools/abtest.py       blind A/B colour test in the browser
+tools/gallery.py      build/index.html to browse the output
 fonts/                Caveat (SIL OFL 1.1) + licence
 reference/photos/     photos of the printed shirts (EXIF/GPS stripped)
 build/                generated output, not committed
@@ -24,6 +25,7 @@ make setup                       # once: .venv + dependencies
 make render                      # all designs -> build/
 make render IDS="hug"            # only some
 make compare                     # build/<id>-compare.jpg for designs with photos
+open build/index.html            # browse everything in build/ (rebuilt by render/compare)
 make approve IDS="hug smile"     # copy build files -> designs/<id>/
 ```
 

@@ -1,6 +1,6 @@
 PY := .venv/bin/python
 
-.PHONY: setup render compare approve clean
+.PHONY: setup render compare gallery approve clean
 
 setup:            ## create virtualenv and install dependencies
 	python3 -m venv .venv
@@ -8,9 +8,14 @@ setup:            ## create virtualenv and install dependencies
 
 render:           ## render all designs (or: make render IDS="hug love")
 	$(PY) tools/render.py $(IDS)
+	$(PY) tools/gallery.py
 
 compare: render   ## photo vs. recreation sheets (only for designs with reference photos)
 	$(PY) tools/compare.py $(IDS)
+	$(PY) tools/gallery.py
+
+gallery:          ## build/index.html to browse build/ (open build/index.html)
+	$(PY) tools/gallery.py
 
 approve:          ## copy approved files to designs/<id>/ : make approve IDS=hug
 	@test -n "$(IDS)" || (echo "usage: make approve IDS=\"hug love\""; exit 1)
