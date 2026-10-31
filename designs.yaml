@@ -61,3 +61,74 @@ designs:
       - solves anything,
       - but hate gets
       - us nowhere
+
+  - id: laugh
+    front:
+      - We should
+      - laugh more
+    back:
+      - I’m not saying
+      - that laughing
+      - solves anything,
+      - but I’ve rarely
+      - regretted
+      - having fun
+
+  - id: dance
+    front:
+      - We should
+      - dance more
+    back:
+      - I’m not saying
+      - that dancing
+      - solves anything,
+      - but it can
+      - definitely change
+      - the mood
+
+  - id: dream
+    front:
+      - We should
+      - dream more
+    back:
+      - I’m not saying
+      - that dreaming
+      - solves anything,
+      - but every
+      - possibility
+      - starts somewhere
+
+  - id: celebrate
+    front:
+      - We should
+      - celebrate more
+    back:
+      - I’m not saying
+      - that celebrating
+      - solves anything,
+      - but good moments
+      - deserve attention
+
+  - id: explore
+    front:
+      - We should
+      - explore more
+    back:
+      - I’m not saying
+      - that exploring
+      - solves anything,
+      - but curiosity
+      - keeps life
+      - interesting
+
+  - id: explore-2
+    front:
+      - We should
+      - explore more
+    back:
+      - I’m not saying
+      - that exploring
+      - solves anything,
+      - but curiosity usually
+      - takes us somewhere
+      - worth going
