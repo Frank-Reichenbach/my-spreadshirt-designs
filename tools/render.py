@@ -29,6 +29,8 @@ from fontTools.varLib.instancer import OverlapMode, instantiateVariableFont
 
 ROOT = Path(__file__).resolve().parent.parent
 MM_PER_INCH = 25.4
+MAX_HEIGHT_MM = 330   # keeps PNG < 4000 px at 300 dpi (Spreadshirt limit), SVG < 380 mm
+MIN_SHRINK = 0.7      # back strokes are ~2.5 mm at 100 %; plot printing needs >= 1.5 mm
 
 
 @dataclass
@@ -105,16 +107,27 @@ def svg_d(rec: RecordingPen) -> str:
 def layout(ts: Typesetter, lines: list[str], side: Side):
     """Return (paths, width_mm, height_mm)."""
     scale = side.cap_height_mm / ts.cap  # mm per font unit
+    lines = [l.strip() for l in lines]
+    if not any(lines):
+        sys.exit("error: a side has no text")
     widest = max(ts.shape(l)[1] for l in lines) * scale
-    shrink = min(1.0, side.max_text_width_mm / widest)  # only when a line is too long
+
+    def natural_height(k):  # canvas height at shrink factor k
+        cap = ts.cap * scale * k
+        return 0.35 * cap + cap + side.line_pitch_mm * k * (len(lines) - 1) + 0.32 * ts.upem * scale * k
+
+    # shrink the whole side uniformly, only if needed to fit width or height
+    shrink = min(1.0, side.max_text_width_mm / widest, MAX_HEIGHT_MM / natural_height(1.0))
     if shrink < 1:
-        print(f"  note: shrinking text to {shrink:.0%} to fit {side.max_text_width_mm} mm", file=sys.stderr)
+        print(f"  note: shrinking text to {shrink:.0%} to fit the print area", file=sys.stderr)
+    if shrink < MIN_SHRINK:
+        sys.exit(f"error: text would shrink to {shrink:.0%}; strokes get too thin for plot "
+                 f"printing - shorten or re-break the lines")
     scale *= shrink
     cap = ts.cap * scale
     pitch = side.line_pitch_mm * shrink
-    desc = 0.32 * ts.upem * scale  # room for g/y descenders below the last line
     top = 0.35 * cap               # room for ascenders (l, d, h) above cap height
-    height = top + cap + pitch * (len(lines) - 1) + desc
+    height = natural_height(shrink)
     paths = []
     for i, line in enumerate(lines):
         adv = ts.shape(line)[1] * scale
