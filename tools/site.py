@@ -7,10 +7,10 @@ The script owns these paths in docs/ and rewrites them on every run:
   favicon.svg, og-image.png, .nojekyll, fonts/, designs/
 Everything else in docs/ (e.g. pattern.md) is left untouched.
 
-No third-party code and no external requests: fonts, images and styles are
-all served from the site itself. The only JavaScript is a tiny first-party
-snippet that remembers the light/dark choice (localStorage, set only after the
-visitor changes the theme); the theme switch itself works with CSS alone.
+No JavaScript, no third-party code, no external requests and nothing stored
+in the visitor's browser: fonts, images and styles are all served from the site
+itself. The light/dark switch works with CSS alone (per page view); by default
+the site follows the system setting.
 """
 from __future__ import annotations
 
@@ -181,7 +181,7 @@ T = {
         "theme": "Theme", "system": "System", "light": "Light", "dark": "Dark",
         "lang_nav": "Language",
         "f_designs": "Designs", "f_source": "Source on GitHub", "f_license": "License",
-        "f_text": "Designs and texts: CC0 1.0 (public domain). Font: Caveat, SIL Open Font License 1.1. No cookies, no tracking, no external resources. If you change the theme, only that choice is stored in your browser.",
+        "f_text": "Designs and texts: CC0 1.0 (public domain). Font: Caveat, SIL Open Font License 1.1. No cookies, no tracking, no external resources, nothing is stored in your browser.",
         "og_alt": "We should … more – {n} free T-shirt designs",
     },
     "de": {
@@ -205,28 +205,20 @@ T = {
         "theme": "Darstellung", "system": "System", "light": "Hell", "dark": "Dunkel",
         "lang_nav": "Sprache",
         "f_designs": "Designs", "f_source": "Quellcode auf GitHub", "f_license": "Lizenz",
-        "f_text": "Designs und Texte: CC0 1.0 (gemeinfrei). Schrift: Caveat, SIL Open Font License 1.1. Keine Cookies, kein Tracking, keine externen Inhalte. Wenn du die Darstellung änderst, wird nur diese Auswahl in deinem Browser gespeichert.",
+        "f_text": "Designs und Texte: CC0 1.0 (gemeinfrei). Schrift: Caveat, SIL Open Font License 1.1. Keine Cookies, kein Tracking, keine externen Inhalte, nichts wird in deinem Browser gespeichert.",
         "og_alt": "We should … more – {n} kostenlose T-Shirt-Designs",
     },
 }
 
 # --------------------------------------------------------------------------- html
-THEME_HEAD_JS = ('<script>try{var t=localStorage.getItem("theme");'
-                 'if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>')
-THEME_BODY_JS = """<script>(function(){var r=document.documentElement;
-var c=document.getElementById("theme-"+(r.dataset.theme||"system"));if(c)c.checked=true;
-document.querySelectorAll('input[name="theme"]').forEach(function(i){i.addEventListener("change",function(){
-var v=i.value;if(v==="system"){delete r.dataset.theme}else{r.dataset.theme=v}
-try{if(v==="system"){localStorage.removeItem("theme")}else{localStorage.setItem("theme",v)}}catch(e){}});});})();</script>"""
-
 LIGHT = "--paper:#f6f3ec;--card:#fff;--ink:#1d2433;--muted:#5a6272;--line:#e2ddd2;--link:%(blue)s;--quote:#f6f3ec;--code:#ece7dc;--hero:%(blue)s;color-scheme:light"
 DARK = "--paper:#11151d;--card:#1a202c;--ink:#e9e6df;--muted:#a4abb8;--line:#2d3546;--link:#9dbbff;--quote:#232a38;--code:#2a3242;--hero:#173e7c;color-scheme:dark"
 
 CSS = """@font-face{font-family:"Caveat";src:url("fonts/caveat-subset.woff2") format("woff2");font-weight:400 700;font-display:swap}
 :root{--blue:%(blue)s;--cream:%(cream)s;""" + LIGHT + """}
 @media (prefers-color-scheme:dark){:root{""" + DARK + """}}
-:root[data-theme=light],:root:has(#theme-light:checked){""" + LIGHT + """}
-:root[data-theme=dark],:root:has(#theme-dark:checked){""" + DARK + """}
+:root:has(#theme-light:checked){""" + LIGHT + """}
+:root:has(#theme-dark:checked){""" + DARK + """}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%%}
 body{margin:0;font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--paper)}
@@ -283,7 +275,6 @@ def head(lang: str, n: int, extra: str) -> str:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-{THEME_HEAD_JS}
 <title>{esc(t['title'])}</title>
 <meta name="description" content="{esc(t['description'].format(n=n))}">
 <link rel="canonical" href="{page_url(lang)}">
@@ -425,7 +416,7 @@ def build_index(designs: list[dict], files: dict, style: dict, lang: str):
 <div class="note"><p>{t['note']}</p></div>
 </section>
 </main>
-""" + footer(lang) + THEME_BODY_JS + "\n</body>\n</html>\n"
+""" + footer(lang) + "</body>\n</html>\n"
     out = DOCS / LANGS[lang]["dir"] / "index.html"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(page, encoding="utf-8")

@@ -17,8 +17,8 @@ visual pattern.
   Back pay-offs stay light, shrugging and understated – no moralizing tone.
 - Generated output goes to `build/` (not committed). After approving designs,
   run `make site` so the GitHub Pages site in `docs/` stays in sync.
-- The site uses no third-party code and no external requests. The only JavaScript
-  is a tiny first-party snippet that remembers the light/dark choice.
+- The site uses no JavaScript, no third-party code, no external requests and
+  stores nothing in the visitor's browser (the theme switch is CSS-only).
 
 ## Attribution
 
