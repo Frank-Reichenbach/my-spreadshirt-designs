@@ -82,9 +82,8 @@ designs:
       - I’m not saying
       - that dancing
       - solves anything,
-      - but it can
-      - definitely change
-      - the mood
+      - but it might
+      - lighten the mood
 
   - id: dream
     front:
@@ -106,22 +105,10 @@ designs:
       - I’m not saying
       - that celebrating
       - solves anything,
-      - but good moments
-      - deserve attention
+      - but it rarely
+      - ruins a good day
 
   - id: explore
-    front:
-      - We should
-      - explore more
-    back:
-      - I’m not saying
-      - that exploring
-      - solves anything,
-      - but curiosity
-      - keeps life
-      - interesting
-
-  - id: explore-2
     front:
       - We should
       - explore more
