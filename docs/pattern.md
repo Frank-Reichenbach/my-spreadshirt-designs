@@ -23,7 +23,9 @@ and takes the pressure off.
 
 ## Visual pattern
 
-- **One colour only**: pale cream yellow (≈ `#F6E8A6`) on a mid steel-blue sport shirt.
+- **One colour only**: warm, very light off-white **`#FFF8E7`** ("Cosmic Latte") on a königsblau shirt.
+  (Photos look yellowish only because of warm indoor light. Chosen in a blind A/B test
+  against `#F5F1E8`: 5:1, see `tools/abtest.py`.)
 - **Font**: casual, slightly slanted handwriting (the originals look like
   *Ink Free*). Re-creation uses **Caveat** (SIL Open Font License, free for
   commercial use) at weight 560, which is visually very close.

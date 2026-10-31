@@ -10,6 +10,7 @@ designs.yaml          texts (front/back pairs) + shared style
 docs/pattern.md       description of the text and visual pattern
 tools/render.py       YAML -> SVG + PNG + preview mock-up
 tools/compare.py      reference photo vs. recreation sheet
+tools/abtest.py       blind A/B colour test in the browser
 fonts/                Caveat (SIL OFL 1.1) + licence
 reference/photos/     photos of the printed shirts (EXIF/GPS stripped)
 build/                generated output, not committed
@@ -46,5 +47,5 @@ keep the series consistent.
 - Vector/plot: lines ≥ 1.5 mm, gaps ≥ 1 mm, ≤ 3 colours, max 38 × 38 cm.
   Smallest strokes here: ≈ 2.5 mm (back text).
 - Pixel: ≥ 200 dpi at print size, max 4000 × 4000 px and 10 MB.
-- The print colour `#F6E8A6` is a target; flex/flock use the closest foil
-  colour Spreadshirt offers (e.g. a pastel/light yellow).
+- The print colour `#FFF8E7` is a target; flex/flock use the closest foil
+  colour Spreadshirt offers (white foil, or cream if available).

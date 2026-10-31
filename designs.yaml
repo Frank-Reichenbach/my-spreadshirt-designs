@@ -11,8 +11,8 @@
 style:
   font: fonts/Caveat[wght].ttf   # OFL licensed, free for commercial use
   weight: 560                    # variable font axis 400..700
-  color: "#F6E8A6"               # pale cream yellow, as on the printed shirts
-  shirt_color: "#4E7290"         # only used for preview mock-ups
+  color: "#FFF8E7"               # "Cosmic Latte" - won blind A/B test vs #F5F1E8 (5:1)
+  shirt_color: "#1F4E9C"         # Königsblau (guessed, exact code unknown) - previews only
   dpi: 300
   front:                         # all sizes in millimetres
     cap_height_mm: 36
