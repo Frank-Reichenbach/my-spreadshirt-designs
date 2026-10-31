@@ -70,3 +70,18 @@ keep the series consistent.
 - Pixel: ≥ 200 dpi at print size, max 4000 × 4000 px and 10 MB.
 - The print colour `#FFF8E7` is a target; flex/flock use the closest foil
   colour Spreadshirt offers (white foil, or cream if available).
+
+## Licensing
+
+| Content | Licence |
+|---|---|
+| Texts, designs (`designs/`, `designs.yaml`), photos (`reference/`), documentation | [CC0 1.0](LICENSES/CC0-1.0.txt) – public domain dedication, use freely, no attribution required |
+| Code (`tools/`, `Makefile`, `requirements.txt`) | [MIT](LICENSES/MIT.txt) – © 2026 Frank Reichenbach |
+| Font Caveat (`fonts/`) | [SIL OFL 1.1](LICENSES/OFL-1.1.txt) – © 2014 The Caveat Project Authors |
+
+Overview: [`LICENSE.md`](LICENSE.md) · per-file details: [`REUSE.toml`](REUSE.toml) ([REUSE](https://reuse.software) format).
+Artwork made with the font may be used under CC0; the font files stay under the OFL.
+
+**Trademarks:** no trademark rights are granted or claimed. Some phrases used in
+these designs may be registered trademarks of third parties in some territories
+and for some goods. Check before commercial use on merchandise.

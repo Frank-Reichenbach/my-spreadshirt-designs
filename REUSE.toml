@@ -1,0 +1,24 @@
+version = 1
+SPDX-PackageName = "spreadshirt-designs"
+SPDX-PackageDownloadLocation = "https://github.com/Frank-Reichenbach/spreadshirt-designs"
+
+# Default: texts, designs, photos, documentation -> public domain dedication
+[[annotations]]
+path = "**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Frank Reichenbach"
+SPDX-License-Identifier = "CC0-1.0"
+
+# Code
+[[annotations]]
+path = ["tools/**", "Makefile", "requirements.txt"]
+precedence = "override"
+SPDX-FileCopyrightText = "2026 Frank Reichenbach"
+SPDX-License-Identifier = "MIT"
+
+# Third-party font
+[[annotations]]
+path = "fonts/**"
+precedence = "override"
+SPDX-FileCopyrightText = "2014 The Caveat Project Authors (https://github.com/googlefonts/caveat)"
+SPDX-License-Identifier = "OFL-1.1"
