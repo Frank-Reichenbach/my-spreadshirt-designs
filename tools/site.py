@@ -169,7 +169,6 @@ T = {
         "designs_h": "The designs",
         "pattern": "Every shirt follows the same pattern: <strong>“We should &lt;something&gt; more”</strong> on the front, <strong>“I’m not saying that it solves anything, but …”</strong> on the back. Topics: {verbs}.",
         "front": "Front", "back": "Back", "download": "Download:",
-        "alt_front": "T-shirt front: {t}", "alt_back": "T-shirt back: {t}",
         "use_h": "How to use them",
         "steps": [
             "Download the <strong>SVG</strong> files (vector, one colour, real size in millimetres). They suit flex or flock printing, which is durable on sports shirts. Use the <strong>PNG</strong> files (transparent, 300 dpi) for digital printing.",
@@ -193,7 +192,6 @@ T = {
         "designs_h": "Die Designs",
         "pattern": 'Jedes Shirt folgt demselben Muster: vorne <strong lang="en">„We should &lt;something&gt; more“</strong>, hinten <strong lang="en">„I’m not saying that it solves anything, but …“</strong>. Themen: <span lang="en">{verbs}</span>.',
         "front": "Vorne", "back": "Hinten", "download": "Download:",
-        "alt_front": "T-Shirt-Vorderseite: {t}", "alt_back": "T-Shirt-Rückseite: {t}",
         "use_h": "So nutzt du sie",
         "steps": [
             "Lade die <strong>SVG</strong>-Dateien herunter (Vektor, einfarbig, echte Größe in Millimetern). Sie eignen sich für Flex- oder Flockdruck, der auf Sportshirts besonders haltbar ist. Für Digitaldruck nimmst du die <strong>PNG</strong>-Dateien (transparent, 300 dpi).",
@@ -305,7 +303,7 @@ def footer(lang: str) -> str:
     t = T[lang]
     return f"""<footer><div class="wrap">
 <nav aria-label="Footer">
-<a href="#top">{t['f_designs']}</a>
+<a href="#designs">{t['f_designs']}</a>
 <a href="{REPO}">{t['f_source']}</a>
 <a href="{REPO}/blob/main/LICENSE.md">{t['f_license']}</a>
 </nav>
@@ -322,18 +320,18 @@ def card(d: dict, f: dict, eager: bool, lang: str) -> str:
 
     def pic(side: str, alt: str) -> str:
         return (f'<picture><source srcset="{p}{f[side + "_webp"]}" type="image/webp">'
-                f'<img src="{p}{f[side + "_jpg"]}" width="{tw}" height="{th}" {loading} decoding="async" alt="{esc(alt)}">'
+                f'<img src="{p}{f[side + "_jpg"]}" width="{tw}" height="{th}" {loading} decoding="async" lang="en" alt="{esc(alt)}">'
                 f'</picture>')
 
     def dl(key: str, label: str) -> str:
-        return f'<a href="{p}{f[key]}" download>{label}<span class="vh"> – {esc(front)}</span></a>'
+        return f'<a href="{p}{f[key]}" download>{label}<span class="vh"> – <span lang="en">{esc(front)}</span></span></a>'
 
     fr, bk = t["front"], t["back"]
     return f"""<li class="card" id="{d['id']}">
 <h3 class="hand" lang="en">{esc(front)}</h3>
 <div class="sides">
-<figure>{pic("front", t["alt_front"].format(t=front))}<figcaption>{fr}</figcaption></figure>
-<figure>{pic("back", t["alt_back"].format(t=back))}<figcaption>{bk}</figcaption></figure>
+<figure>{pic("front", front)}<figcaption>{fr}</figcaption></figure>
+<figure>{pic("back", back)}<figcaption>{bk}</figcaption></figure>
 </div>
 <p class="back" lang="en">{esc(back)}</p>
 <p class="dl">{t['download']}
@@ -394,7 +392,7 @@ def build_index(designs: list[dict], files: dict, style: dict, lang: str):
     badges = "".join(f"<li>{b.format(n=n)}</li>" for b in t["badges"])
     width = f"{style['front']['width_mm'] / 10:g}"
     steps = "".join(f"<li>{s.format(color=esc(style['color']), width=width, repo=REPO)}</li>" for s in t["steps"])
-    page = head(lang, n, og) + f"""<body id="top">
+    page = head(lang, n, og) + f"""<body>
 <header class="hero"><div class="wrap">
 {topbar(lang)}
 <h1 class="hand" lang="en">We should … more</h1>
@@ -403,7 +401,7 @@ def build_index(designs: list[dict], files: dict, style: dict, lang: str):
 <ul class="badges">{badges}</ul>
 </div></header>
 <main class="wrap">
-<section aria-labelledby="designs-h">
+<section id="designs" aria-labelledby="designs-h">
 <h2 id="designs-h">{t['designs_h']}</h2>
 <p>{t['pattern'].format(verbs=esc(verbs))}</p>
 <ul class="grid">
