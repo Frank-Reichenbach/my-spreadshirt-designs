@@ -4,7 +4,9 @@
 Renders every design side in both colours on the shirt colour, serves a small
 page on http://localhost:8765 and records each click in build/abtest/results.json.
 
-Usage: python tools/abtest.py "#F5F1E8" "#FFF8E7" [--shirt "#1F4E9C"]
+Approved designs are left out unless --include-approved is given.
+
+Usage: python tools/abtest.py "#F5F1E8" "#FFF8E7" [--shirt "#1F4E9C"] [--include-approved]
 """
 from __future__ import annotations
 
@@ -32,16 +34,19 @@ def to_pil(img):
                                        alphaType=skia.kUnpremul_AlphaType).tobytes())
 
 
-def build_images(colors, shirt):
+def build_images(colors, shirt, include_approved=False):
     cfg = yaml.safe_load((ROOT / "designs.yaml").read_text(encoding="utf-8"))
+    approved = set() if include_approved else render.project.approved_ids()
     style = cfg["style"]
     ts = render.Typesetter(ROOT / style["font"], style["weight"])
     sides = {k: render.Side(**style[k]) for k in ("front", "back")}
     trials = []
     OUT.mkdir(parents=True, exist_ok=True)
     for d in cfg["designs"]:
+        if d["id"] in approved:
+            continue
         for side in ("front", "back"):
-            paths, w, h = render.layout(ts, d[side], sides[side])
+            paths, w, h, _ = render.layout(ts, d[side], sides[side])
             entry = {"id": f"{d['id']}-{side}", "images": {}}
             for key, col in zip("AB", colors):
                 art = to_pil(render.rasterize(paths, w, h, col, 60))
@@ -132,9 +137,11 @@ def main():
     ap.add_argument("color_b")
     ap.add_argument("--shirt", default="#1F4E9C", help="shirt colour (Königsblau guess)")
     ap.add_argument("--port", type=int, default=8765)
+    ap.add_argument("--include-approved", action="store_true",
+                    help="also show approved designs (images go to build/abtest/ only)")
     args = ap.parse_args()
 
-    trials = build_images([args.color_a, args.color_b], args.shirt)
+    trials = build_images([args.color_a, args.color_b], args.shirt, args.include_approved)
     Handler.page = (PAGE.replace("__TRIALS__", json.dumps(trials))
                     .replace("__COLORS__", json.dumps({"A": args.color_a, "B": args.color_b}))).encode()
     res = OUT / "results.json"

@@ -6,9 +6,14 @@ For every design and side (front/back) this writes to the build directory:
   <id>-<side>.png          transparent bitmap at the configured dpi
   <id>-preview.jpg         front + back mock-up on the shirt colour (for approval)
 
+Approved designs (designs/<id>/ exists) are skipped and their stale build
+files removed. Use --include-approved to re-render them into build/ for
+comparison; designs/ itself is never written by this script.
+
 Usage:
-  python tools/render.py                 # all designs
-  python tools/render.py hug smile       # selected ids
+  python tools/render.py                       # all drafts
+  python tools/render.py dance laugh           # selected drafts
+  python tools/render.py --include-approved    # drafts + approved (into build/ only)
 """
 from __future__ import annotations
 
@@ -19,7 +24,6 @@ from pathlib import Path
 
 import skia
 import uharfbuzz as hb
-import yaml
 from fontTools.pens.basePen import BasePen
 from fontTools.pens.recordingPen import RecordingPen
 from fontTools.pens.svgPathPen import SVGPathPen
@@ -27,7 +31,9 @@ from fontTools.pens.transformPen import TransformPen
 from fontTools.ttLib import TTFont
 from fontTools.varLib.instancer import OverlapMode, instantiateVariableFont
 
-ROOT = Path(__file__).resolve().parent.parent
+import project  # noqa: E402  (tools/ is on sys.path when run as a script)
+
+ROOT = project.ROOT
 MM_PER_INCH = 25.4
 MAX_HEIGHT_MM = 330   # keeps PNG < 4000 px at 300 dpi (Spreadshirt limit), SVG < 380 mm
 MIN_SHRINK = 0.7      # back strokes are ~2.5 mm at 100 %; plot printing needs >= 1.5 mm
@@ -105,7 +111,7 @@ def svg_d(rec: RecordingPen) -> str:
 
 
 def layout(ts: Typesetter, lines: list[str], side: Side):
-    """Return (paths, width_mm, height_mm)."""
+    """Return (paths, width_mm, height_mm, shrink factor)."""
     scale = side.cap_height_mm / ts.cap  # mm per font unit
     lines = [l.strip() for l in lines]
     if not any(lines):
@@ -118,22 +124,20 @@ def layout(ts: Typesetter, lines: list[str], side: Side):
 
     # shrink the whole side uniformly, only if needed to fit width or height
     shrink = min(1.0, side.max_text_width_mm / widest, MAX_HEIGHT_MM / natural_height(1.0))
-    if shrink < 1:
-        print(f"  note: shrinking text to {shrink:.0%} to fit the print area", file=sys.stderr)
     if shrink < MIN_SHRINK:
         sys.exit(f"error: text would shrink to {shrink:.0%}; strokes get too thin for plot "
                  f"printing - shorten or re-break the lines")
+    height = natural_height(shrink)  # before scaling `scale`: natural_height applies k itself
     scale *= shrink
     cap = ts.cap * scale
     pitch = side.line_pitch_mm * shrink
     top = 0.35 * cap               # room for ascenders (l, d, h) above cap height
-    height = natural_height(shrink)
     paths = []
     for i, line in enumerate(lines):
         adv = ts.shape(line)[1] * scale
         baseline = top + cap + i * pitch
         paths.append(ts.line_outline(line, scale, (side.width_mm - adv) / 2, baseline))
-    return paths, side.width_mm, height
+    return paths, side.width_mm, height, shrink
 
 
 def write_svg(path: Path, paths: list[RecordingPen], w: float, h: float, color: str):
@@ -199,30 +203,56 @@ def preview(front, back, style, out: Path):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("ids", nargs="*", help="design ids to render (default: all)")
-    ap.add_argument("--config", default=ROOT / "designs.yaml", type=Path)
-    ap.add_argument("--out", default=ROOT / "build", type=Path)
+    ap.add_argument("ids", nargs="*", help="design ids to render (default: all drafts)")
+    ap.add_argument("--include-approved", action="store_true",
+                    help="also re-render approved designs (into build/, for comparison only)")
+    ap.add_argument("--config", default=project.CONFIG, type=Path)
+    ap.add_argument("--out", default=project.BUILD, type=Path)
     args = ap.parse_args(argv)
+    if project.is_inside(args.out, project.APPROVED):
+        sys.exit("error: --out must not point into designs/ (approved files are written by approve.py only)")
 
-    cfg = yaml.safe_load(args.config.read_text(encoding="utf-8"))
+    cfg = project.load_config(args.config)
     style = cfg["style"]
-    ts = Typesetter(ROOT / style["font"], style["weight"])
-    sides = {k: Side(**style[k]) for k in ("front", "back")}
-    designs = [d for d in cfg["designs"] if not args.ids or d["id"] in args.ids]
-    if args.ids and len(designs) != len(set(args.ids)):
-        sys.exit(f"unknown id(s): {set(args.ids) - {d['id'] for d in designs}}")
+    by_id = {d["id"]: d for d in cfg["designs"]}
+    unknown = set(args.ids) - set(by_id)
+    if unknown:
+        sys.exit(f"error: unknown id(s): {', '.join(sorted(unknown))}")
+    approved = project.approved_ids()
 
+    # drift / orphan warnings for approved designs
+    for did in sorted(approved):
+        msg = project.drift(did, by_id.get(did), style)
+        if msg:
+            print(f"warning: {did}: {msg}", file=sys.stderr)
+
+    todo = []
+    for did in args.ids or list(by_id):
+        if did in approved and not args.include_approved:
+            stale = [args.out / f for f in project.artifacts(did) + [f"{did}.inputs"] if (args.out / f).exists()]
+            for f in stale:
+                f.unlink()
+            print(f"skip {did} (approved - use --include-approved / FORCE=1 to re-render)")
+            continue
+        todo.append(by_id[did])
+
+    ts = Typesetter(ROOT / style["font"], style["weight"])
+    sides = {k: Side(**style[k]) for k in project.SIDES}
     args.out.mkdir(parents=True, exist_ok=True)
-    for d in designs:
+    for d in todo:
+        stamp = args.out / f"{d['id']}.inputs"
+        stamp.unlink(missing_ok=True)  # an interrupted render must not look approvable
         results = {}
-        for side in ("front", "back"):
-            paths, w, h = layout(ts, d[side], sides[side])
+        for side in project.SIDES:
+            paths, w, h, shrink = layout(ts, d[side], sides[side])
             base = args.out / f"{d['id']}-{side}"
             write_svg(base.with_suffix(".svg"), paths, w, h, style["color"])
             write_png(rasterize(paths, w, h, style["color"], style["dpi"]), base.with_suffix(".png"), style["dpi"])
             results[side] = (paths, w, h)
-            print(f"{base.name}: {w:.0f} x {h:.0f} mm")
+            print(f"{base.name}: {w:.0f} x {h:.0f} mm" + (f"  (text scaled to {shrink:.0%} to fit)" if shrink < 1 else ""))
         preview(results["front"], results["back"], style, args.out / f"{d['id']}-preview.jpg")
+        # fingerprint of the inputs, checked by approve.py
+        stamp.write_text(project.fingerprint(d, style) + "\n")
 
 
 if __name__ == "__main__":
