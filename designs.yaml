@@ -118,3 +118,48 @@ designs:
       - but curiosity usually
       - takes us somewhere
       - worth going
+
+  - id: play
+    front:
+      - We should
+      - play more
+    back:
+      - I’m not saying
+      - that playing
+      - solves anything,
+      - but it beats
+      - worrying about it
+
+  - id: sing
+    front:
+      - We should
+      - sing more
+    back:
+      - I’m not saying
+      - that singing
+      - solves anything,
+      - but it’s hard
+      - to stay grumpy
+
+  - id: cuddle
+    front:
+      - We should
+      - cuddle more
+    back:
+      - I’m not saying
+      - that cuddling
+      - solves anything,
+      - but affection
+      - is rarely wasted
+
+  - id: kiss
+    front:
+      - We should
+      - kiss more
+    back:
+      - I’m not saying
+      - that kissing
+      - solves anything,
+      - but it beats
+      - another long
+      - discussion
