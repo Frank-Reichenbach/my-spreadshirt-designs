@@ -163,3 +163,15 @@ designs:
       - but it beats
       - another long
       - discussion
+
+  - id: wonder
+    front:
+      - We should
+      - wonder more
+    back:
+      - I’m not saying
+      - that wondering
+      - solves anything,
+      - but the world
+      - does have
+      - its moments
