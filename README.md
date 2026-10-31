@@ -1,5 +1,7 @@
 # spreadshirt
 
+Website: https://frank-reichenbach.github.io/my-spreadshirt-designs/
+
 Text-only T-shirt designs for [spreadshirt.de](https://www.spreadshirt.de),
 generated from a single YAML file so every shirt in the series looks the same.
 
@@ -14,6 +16,7 @@ tools/gallery.py      build/index.html: drafts + approved designs
 tools/compare.py      reference photo vs. recreation sheet
 tools/abtest.py       blind A/B colour test in the browser
 tools/project.py      shared helpers (config, approval state, fingerprints)
+tools/site.py         docs/ = GitHub Pages site, settings in site.yaml
 fonts/                Caveat (SIL OFL 1.1) + licence
 reference/photos/     photos of the printed shirts (EXIF/GPS stripped)
 build/                generated drafts, not committed
@@ -29,6 +32,7 @@ make render IDS="dance laugh"    # only some
 open build/index.html            # browse drafts and approved designs
 make approve IDS="dance laugh"   # build/ -> designs/<id>/
 make compare                     # photo vs. recreation (designs with reference photos)
+make site                        # GitHub Pages site in docs/ (approved designs only)
 make clean                       # remove build/ (never touches designs/)
 ```
 

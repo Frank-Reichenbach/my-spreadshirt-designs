@@ -3,7 +3,7 @@ PY := .venv/bin/python
 FORCE_FLAG_RENDER  := $(if $(filter 1,$(FORCE)),--include-approved)
 FORCE_FLAG_APPROVE := $(if $(filter 1,$(FORCE)),--force)
 
-.PHONY: setup render compare gallery approve clean
+.PHONY: setup render compare gallery approve site clean
 
 setup:            ## create virtualenv and install dependencies
 	python3 -m venv .venv
@@ -24,6 +24,9 @@ approve:          ## designs/<id>/ from build: make approve IDS="dance laugh" (F
 	@test -n "$(IDS)" || (echo "usage: make approve IDS=\"dance laugh\""; exit 1)
 	$(PY) tools/approve.py $(FORCE_FLAG_APPROVE) $(IDS)
 	$(PY) tools/gallery.py
+
+site:             ## build the GitHub Pages site in docs/ from approved designs
+	$(PY) tools/site.py
 
 clean:            ## remove build/ (never touches designs/)
 	rm -rf build

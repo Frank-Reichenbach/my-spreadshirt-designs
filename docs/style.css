@@ -1,0 +1,45 @@
+@font-face{font-family:"Caveat";src:url("fonts/caveat-subset.woff2") format("woff2");font-weight:400 700;font-display:swap}
+:root{--blue:#1F4E9C;--cream:#FFF8E7;--paper:#f6f3ec;--card:#fff;--ink:#1d2433;--muted:#5a6272;--line:#e2ddd2;--link:#1F4E9C;--quote:#f6f3ec;--code:#ece7dc;--hero:#1F4E9C;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--paper:#11151d;--card:#1a202c;--ink:#e9e6df;--muted:#a4abb8;--line:#2d3546;--link:#9dbbff;--quote:#232a38;--code:#2a3242;--hero:#173e7c;color-scheme:dark}}
+:root[data-theme=light],:root:has(#theme-light:checked){--paper:#f6f3ec;--card:#fff;--ink:#1d2433;--muted:#5a6272;--line:#e2ddd2;--link:#1F4E9C;--quote:#f6f3ec;--code:#ece7dc;--hero:#1F4E9C;color-scheme:light}
+:root[data-theme=dark],:root:has(#theme-dark:checked){--paper:#11151d;--card:#1a202c;--ink:#e9e6df;--muted:#a4abb8;--line:#2d3546;--link:#9dbbff;--quote:#232a38;--code:#2a3242;--hero:#173e7c;color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--paper)}
+a{color:var(--link)} a:focus-visible,input:focus-visible+label{outline:3px solid var(--link);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+header.hero{background:var(--hero);color:var(--cream);padding:20px 0 48px}
+.topbar{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:10px 22px;margin-bottom:28px;font-size:.92rem}
+.topbar a{color:var(--cream)} .hero a:focus-visible,.hero input:focus-visible+label{outline-color:var(--cream)}
+.langs{display:flex;gap:10px;margin:0;padding:0;list-style:none}
+.langs [aria-current]{font-weight:700;text-decoration:none}
+.theme{border:0;margin:0;padding:0;display:flex;align-items:center;gap:4px}
+.theme legend{float:left;margin-right:8px}
+.theme input{position:absolute;opacity:0;width:1px;height:1px}
+.theme label{border:1px solid color-mix(in srgb,var(--cream) 55%,transparent);border-radius:999px;padding:2px 11px;cursor:pointer}
+.theme input:checked+label{background:var(--cream);color:var(--hero)}
+@supports not selector(:has(*)){.theme{display:none}}
+.hand{font-family:"Caveat","Segoe Print","Bradley Hand",cursive;font-weight:560}
+.hero h1{font-size:clamp(3rem,9vw,5.5rem);line-height:1;margin:0 0 .3em}
+.hero p{max-width:40em;font-size:1.15rem;margin:.4em 0}
+.hero p a{color:var(--cream)}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;padding:0;list-style:none}
+.badges li{border:1px solid color-mix(in srgb,var(--cream) 55%,transparent);border-radius:999px;padding:3px 12px;font-size:.9rem}
+main section{padding:40px 0 8px}
+h2{font-size:1.6rem;margin:0 0 .6em}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(330px,100%),1fr));gap:24px;padding:0;list-style:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.card h3{font-size:2.1rem;line-height:1.1;margin:0;padding:18px 20px 4px;color:var(--link)}
+.sides{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 16px}
+.sides figure{margin:0}
+.sides img{width:100%;height:auto;display:block;border-radius:8px}
+.sides figcaption{font-size:.8rem;color:var(--muted);text-align:center;margin-top:4px}
+.back{margin:0 20px;padding:10px 14px;border-left:3px solid var(--link);background:var(--quote);border-radius:0 8px 8px 0}
+.dl{display:flex;flex-wrap:wrap;gap:6px 14px;padding:14px 20px 18px;margin-top:auto;font-size:.92rem}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.steps{padding-left:1.2em} .steps li{margin:.35em 0}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+code{background:var(--code);border-radius:4px;padding:1px 5px;font-size:.92em}
+footer{margin-top:48px;border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);font-size:.92rem}
+footer nav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:8px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
